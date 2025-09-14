@@ -552,7 +552,7 @@ public static class EasyJson
     public static async Task<T?> DeserializeFromCompressed<T>(Stream json, JsonSerializerOptions? options = null)
     {
         await using GZipStream decompressor = new GZipStream(json, CompressionMode.Decompress, leaveOpen: true);
-        return await JsonSerializer.DeserializeAsync<T>(decompressor, options);
+        return await JsonSerializer.DeserializeAsync<T>(decompressor, options).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -562,7 +562,7 @@ public static class EasyJson
         Stream target, T payload, JsonSerializerOptions? options = null, CompressionLevel level = CompressionLevel.Optimal)
     {
         await using GZipStream compressor = new(target, level, true);
-        await JsonSerializer.SerializeAsync(compressor, payload, options);
+        await JsonSerializer.SerializeAsync(compressor, payload, options).ConfigureAwait(false);
     }
 
     /// <summary>
