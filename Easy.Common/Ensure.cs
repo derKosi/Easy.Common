@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 
 /// <summary>
 /// Helper class that will <see langword="throw"/> exceptions when conditions are not satisfied.
@@ -76,7 +75,7 @@ public static class Ensure
     /// </exception>
     /// <returns> The <typeparamref name="T"/>.</returns>
     [DebuggerStepThrough]
-    public static T NotNull<T>(T? value, string paramName) where T : class
+    public static T NotNull<T>([NotNull] T? value, string paramName) where T : class
     {
         ArgumentNullException.ThrowIfNull(value, paramName);
         return value;
@@ -126,10 +125,10 @@ public static class Ensure
     ///     Thrown when <paramref name="collection"/> is empty.
     /// </exception>
     [DebuggerStepThrough]
-    public static ICollection<T> NotNullOrEmpty<T>(ICollection<T> collection, string message = "Collection must not be null or empty.")
+    public static ICollection<T> NotNullOrEmpty<T>([NotNull] ICollection<T>? collection, string message = "Collection must not be null or empty.")
     {
         NotNull(collection, nameof(collection));
-        Not<ArgumentException>(!collection.Any(), message);
+        Not<ArgumentException>(collection.Count == 0, message);
         return collection;
     }
 
@@ -143,7 +142,7 @@ public static class Ensure
     ///     Thrown when <paramref name="value"/> is null or empty or whitespace.
     /// </exception>
     [DebuggerStepThrough]
-    public static string NotNullOrEmptyOrWhiteSpace(string value, string message = "String must not be null, empty or whitespace.")
+    public static string NotNullOrEmptyOrWhiteSpace([NotNull] string? value, string message = "String must not be null, empty or whitespace.")
     {
         That<ArgumentException>(value.IsNotNullOrEmptyOrWhiteSpace(), message);
         return value;
